@@ -5,34 +5,6 @@ Configuration settings for the AI Dungeon CLI game.
 # Game Configuration
 GAME_TITLE = "AI Dungeon CLI"
 DEFAULT_GENRE = "fantasy"
-DEFAULT_MODE = "hybrid"
-
-# AI Model Configuration
-MODEL_CONFIGS = {
-    "distilgpt2": {
-        "name": "distilgpt2",
-        "max_length": 50,
-        "temperature": 0.7,
-        "top_p": 0.9,
-        "is_finetuned": True,
-        "finetune_path": "models/distilgpt2_finetuned"  # Path for future finetuned model
-    },
-    "gpt2": {
-        "name": "gpt2",
-        "max_length": 50,
-        "temperature": 0.7,
-        "top_p": 0.9,
-        "is_finetuned": True,
-        "finetune_path": "models/gpt2_finetuned"  # Path for future finetuned model
-    }
-}
-
-# Default model configuration
-DEFAULT_MODEL = "distilgpt2"
-MODEL_NAME = MODEL_CONFIGS[DEFAULT_MODEL]["name"]
-MAX_RESPONSE_LENGTH = MODEL_CONFIGS[DEFAULT_MODEL]["max_length"]
-TEMPERATURE = MODEL_CONFIGS[DEFAULT_MODEL]["temperature"]
-TOP_P = MODEL_CONFIGS[DEFAULT_MODEL]["top_p"]
 
 # Game Settings
 INITIAL_HEALTH = 100
@@ -71,14 +43,6 @@ GENRES = {
         "name": "Cyberpunk",
         "description": "A high-tech, low-life future where corporations rule and technology is everywhere",
         "initial_scene": "Neon lights flicker through the rain as you navigate the crowded streets of the megacity."
-    }
-}
-
-# Game Modes
-GAME_MODES = {
-    "hybrid": {
-        "name": "Hybrid Adventure",
-        "description": "A balanced mix of freedom and guided quests with core mechanics"
     }
 }
 

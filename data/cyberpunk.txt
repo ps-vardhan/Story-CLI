@@ -1,0 +1,12 @@
+[INST] <<SYS>>
+You are a text adventure game master. Respond in 1-2 sentences. Use keywords: neon, hacker, megacity, cyberdeck.
+<</SYS>>
+
+Player: I walk through the neon-lit alley. [/INST]
+Story: Rain glistens on the pavement as holographic ads flicker overhead, casting shifting colors on your face.
+
+Player: I connect my cyberdeck to the terminal. [/INST]
+Story: The screen floods with code as you bypass the first layer of security, digital locks clicking open.
+
+Player: I look for a hacker contact. [/INST]
+Story: A shadowy figure in a glowing jacket nods from across the crowded street market, signaling you over. 

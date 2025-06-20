@@ -33,7 +33,6 @@ class Game:
         self.running = True
         self.current_scene = None
         self.player = None
-        self.game_mode = None
         self.genre = None
         self.engine = None
 
@@ -44,21 +43,6 @@ class Game:
             "An interactive text-based adventure game powered by AI.",
             title=GAME_TITLE
         ))
-        
-        # Choose game mode
-        mode_choices = list(GAME_MODES.keys())
-        mode_descriptions = [f"{GAME_MODES[mode]['name']}: {GAME_MODES[mode]['description']}" 
-                           for mode in mode_choices]
-        
-        self.console.print("\n[bold]Available Game Modes:[/bold]")
-        for desc in mode_descriptions:
-            self.console.print(f"- {desc}")
-            
-        self.game_mode = Prompt.ask(
-            "\nChoose your game mode",
-            choices=mode_choices,
-            default=DEFAULT_MODE
-        )
         
         # Choose genre
         genre_choices = list(GENRES.keys())
@@ -88,12 +72,11 @@ class Game:
         }
         
         # Initialize game engine
-        self.engine = GameEngine(self.genre, self.game_mode)
+        self.engine = GameEngine(self.genre)
         self.current_scene = self.engine.current_scene
         
         self.console.print(f"\n[green]Welcome, {self.player['name']}![/green]")
-        self.console.print(f"Genre: {GENRES[self.genre]['name']}")
-        self.console.print(f"Mode: {GAME_MODES[self.game_mode]['name']}\n")
+        self.console.print(f"Genre: {GENRES[self.genre]['name']}\n")
         
         # Display initial scene
         self.console.print(Panel(self.current_scene, title="Scene"))
