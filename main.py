@@ -6,26 +6,26 @@ from rich.console import Console
 from rich.prompt import Prompt
 from rich.panel import Panel
 from rich.text import Text
+from rich.columns import Columns
+from rich.table import Table
 from colorama import init
 from dotenv import load_dotenv
 from game_engine import GameEngine
 from config import (
     GAME_TITLE,
-    DEFAULT_GENRE,
-    DEFAULT_MODE,
+    DEFAULT_MAIN_GENRE,
+    DEFAULT_SUB_GENRE,
     INITIAL_HEALTH,
     INITIAL_STRENGTH,
     INITIAL_INTELLIGENCE,
     INITIAL_CHARISMA,
-    GENRES,
-    GAME_MODES
+    MAIN_GENRES,
+    SUB_GENRES,
+    STORY_SETTINGS
 )
 
 # Initialize colorama for Windows compatibility
 init()
-
-# Initialize Rich console
-console = Console()
 
 class Game:
     def __init__(self):
@@ -33,7 +33,8 @@ class Game:
         self.running = True
         self.current_scene = None
         self.player = None
-        self.genre = None
+        self.main_genre = None
+        self.sub_genre = None
         self.engine = None
 
     def initialize_game(self):
@@ -44,19 +45,34 @@ class Game:
             title=GAME_TITLE
         ))
         
-        # Choose genre
-        genre_choices = list(GENRES.keys())
-        genre_descriptions = [f"{GENRES[genre]['name']}: {GENRES[genre]['description']}" 
-                            for genre in genre_choices]
+        # Choose main genre
+        self.console.print("\n[bold]Choose your main genre:[/bold]")
+        main_genre_choices = list(MAIN_GENRES.keys())
         
-        self.console.print("\n[bold]Available Genres:[/bold]")
-        for desc in genre_descriptions:
-            self.console.print(f"- {desc}")
+        for i, genre_key in enumerate(main_genre_choices, 1):
+            genre_info = MAIN_GENRES[genre_key]
+            color = genre_info.get("color", "white")
+            self.console.print(f"[{color}]{i}. {genre_info['name']}: {genre_info['description']}[/{color}]")
             
-        self.genre = Prompt.ask(
-            "\nChoose your genre",
-            choices=genre_choices,
-            default=DEFAULT_GENRE
+        self.main_genre = Prompt.ask(
+            "\nChoose your main genre",
+            choices=main_genre_choices,
+            default=DEFAULT_MAIN_GENRE
+        )
+        
+        # Choose sub-genre
+        self.console.print(f"\n[bold]Choose your {MAIN_GENRES[self.main_genre]['name']} sub-genre:[/bold]")
+        sub_genre_choices = list(SUB_GENRES.keys())
+        
+        for i, sub_genre_key in enumerate(sub_genre_choices, 1):
+            sub_genre_info = SUB_GENRES[sub_genre_key]
+            color = sub_genre_info.get("color", "white")
+            self.console.print(f"[{color}]{i}. {sub_genre_info['name']}: {sub_genre_info['description']}[/{color}]")
+            
+        self.sub_genre = Prompt.ask(
+            f"\nChoose your {MAIN_GENRES[self.main_genre]['name']} sub-genre",
+            choices=sub_genre_choices,
+            default=DEFAULT_SUB_GENRE
         )
         
         # Initialize player
@@ -72,14 +88,31 @@ class Game:
         }
         
         # Initialize game engine
-        self.engine = GameEngine(self.genre)
-        self.current_scene = self.engine.current_scene
+        self.console.print(f"\n[green]Initializing {MAIN_GENRES[self.main_genre]['name']} story in {SUB_GENRES[self.sub_genre]['name']} setting...[/green]")
+        self.engine = GameEngine(self.main_genre, self.sub_genre)
         
         self.console.print(f"\n[green]Welcome, {self.player['name']}![/green]")
-        self.console.print(f"Genre: {GENRES[self.genre]['name']}\n")
+        self.console.print(f"Genre: {MAIN_GENRES[self.main_genre]['name']} - {SUB_GENRES[self.sub_genre]['name']}\n")
         
         # Display initial scene
-        self.console.print(Panel(self.current_scene, title="Scene"))
+        self.display_story_chunks()
+
+    def display_story_chunks(self):
+        """Display recent story chunks in a formatted way."""
+        chunks = self.engine.get_recent_story_chunks()
+        
+        if chunks:
+            self.console.print(Panel(
+                "\n".join(chunks),
+                title="[bold]Story[/bold]",
+                border_style="blue"
+            ))
+        else:
+            self.console.print(Panel(
+                "The story begins...",
+                title="[bold]Story[/bold]",
+                border_style="blue"
+            ))
 
     def process_command(self, command):
         """Process player commands."""
@@ -98,20 +131,28 @@ class Game:
         elif command == "stats":
             return self.show_stats()
         
+        elif command == "save":
+            self.engine.save_game()
+            return "Game saved successfully!"
+        
+        elif command == "load":
+            self.engine.load_game()
+            self.display_story_chunks()
+            return "Game loaded successfully!"
+        
+        elif command == "summary":
+            return self.engine.get_story_summary()
+        
         # Process game actions
         return self.process_game_action(command)
 
     def process_game_action(self, action):
         """Process game actions and generate AI response."""
-        # Get current game state
-        game_state = self.engine.get_game_state()
-        
         # Generate AI response
-        response = self.engine.generate_response(action, game_state)
+        response = self.engine.generate_response(action)
         
-        # Update game state
-        self.engine.update_game_state(response)
-        self.current_scene = response
+        # Display the new story chunks
+        self.display_story_chunks()
         
         return response
 
@@ -135,11 +176,21 @@ Charisma: {stats['charisma']}"""
     def get_help_text(self):
         """Return help text for available commands."""
         return """Available commands:
-- Type any action to play (e.g., 'go north', 'attack the dragon')
+- Type any action to play (e.g., 'go north', 'attack the dragon', 'search the room')
 - 'help': Show this help message
 - 'inventory': Check your inventory
 - 'stats': View your character stats
-- 'quit': Exit the game"""
+- 'save': Save your current game
+- 'load': Load your saved game
+- 'summary': Show story summary
+- 'quit': Exit the game
+
+Action examples:
+- Movement: go north, walk to the door, enter building
+- Interaction: talk to npc, ask about quest, greet guard
+- Combat: attack enemy, defend yourself, use weapon
+- Investigation: search room, examine body, look for clues
+- Item usage: pick up key, use potion, examine map"""
 
     def run(self):
         """Main game loop."""
@@ -147,9 +198,13 @@ Charisma: {stats['charisma']}"""
         
         while self.running:
             try:
-                command = Prompt.ask("\nWhat would you like to do?")
+                command = Prompt.ask("\n[bold]What would you like to do?[/bold]")
                 response = self.process_command(command)
-                self.console.print(Panel(response, title="Response"))
+                
+                if response and response != "Goodbye!":
+                    # Don't display response for story chunks as they're shown above
+                    if not response.startswith("Game") and not response.startswith("Your"):
+                        self.console.print(Panel(response, title="[bold]Response[/bold]", border_style="green"))
                 
             except KeyboardInterrupt:
                 self.console.print("\n[yellow]Game interrupted. Use 'quit' to exit properly.[/yellow]")

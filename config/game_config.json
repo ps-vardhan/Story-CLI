@@ -1,0 +1,8 @@
+{
+  "ollama_model": "llama2:7b-chat",
+  "context_length": 1024,
+  "max_tokens": 100,
+  "temperature": 0.8,
+  "story_chunk_size": 3,
+  "context_injection_interval": 5
+}

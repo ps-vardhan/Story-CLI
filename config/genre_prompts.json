@@ -1,0 +1,23 @@
+{
+  "mystery": {
+    "fantasy": "Create a mysterious crime story in a magical fantasy world where the hero is the culprit. Include magical elements, enchanted objects, and mystical creatures.",
+    "horror": "Create a mysterious crime story in a horror setting where the hero is the culprit. Include supernatural elements, dark atmosphere, and psychological terror.",
+    "scifi": "Create a mysterious crime story in a futuristic sci-fi world where the hero is the culprit. Include advanced technology, space elements, and cyberpunk themes.",
+    "modern": "Create a mysterious crime story in modern day settings where the hero is the culprit. Include contemporary technology, urban settings, and realistic scenarios.",
+    "cosmic": "Create a mysterious crime story with cosmic horror elements where the hero is the culprit. Include eldritch beings, cosmic entities, and reality-bending elements."
+  },
+  "adventure": {
+    "fantasy": "Create an epic adventure story in a magical fantasy world. Include quests, magical creatures, enchanted items, and heroic challenges.",
+    "horror": "Create an adventure story in a horror setting. Include survival challenges, supernatural threats, and dark exploration.",
+    "scifi": "Create an adventure story in a futuristic sci-fi world. Include space exploration, advanced technology, and alien encounters.",
+    "modern": "Create an adventure story in modern day settings. Include contemporary challenges, urban exploration, and real-world excitement.",
+    "cosmic": "Create an adventure story with cosmic elements. Include space exploration, cosmic phenomena, and interdimensional travel."
+  },
+  "action": {
+    "fantasy": "Create an action-packed story in a magical fantasy world. Include epic battles, magical combat, and heroic feats.",
+    "horror": "Create an action story in a horror setting. Include intense survival action, supernatural combat, and thrilling escapes.",
+    "scifi": "Create an action story in a futuristic sci-fi world. Include high-tech combat, space battles, and futuristic action sequences.",
+    "modern": "Create an action story in modern day settings. Include contemporary action, realistic combat, and modern-day excitement.",
+    "cosmic": "Create an action story with cosmic elements. Include cosmic battles, reality-warping action, and interdimensional combat."
+  }
+}
